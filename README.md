@@ -85,6 +85,10 @@ chmod +x $GERRIT_HOME/hooks/ref-update
     refUpdateHook = new_script_name
 ```
 
+## Error Diagnostics
+If you edit the script on Windows and use it on Linux, you may encounter some mysterious errors like "cannot run program hook". To fix this error, you just need to 
+change the EOL characters from CRLF into LF.
+
 ## Gerrit Logging
 
 All print statements are appended to the $GERRIT_HOME/logs/error_log. 
