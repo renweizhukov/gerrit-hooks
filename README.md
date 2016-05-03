@@ -50,9 +50,11 @@ This commit fixes #123, refs #456, and refs #789.
 &lt;code change short description&gt;
 
 HOW BUILT
+
 &lt;how did you build this code change&gt;
 
 HOW VERIFIED
+
 &lt;how did you verify this code change&gt;
 
 Change-Id: I214325432654654adf324325432ec32435435456
