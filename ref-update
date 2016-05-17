@@ -93,7 +93,7 @@ if __name__ == '__main__':
         sys.exit(0)
     
     # Get the SHA-1s of all commits included in this push as one string.
-    if int(options.oldrev) != 0:
+    if int(options.oldrev, 16) != 0:
         commitStr = check_output(['git', 'rev-list', options.oldrev + '..' + options.newrev])
     else:
         # According to https://groups.google.com/forum/#!topic/repo-discuss/Rw_t-jP7X1M, oldrev is always 0,
