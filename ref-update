@@ -38,7 +38,7 @@
 # parent SHA-1 (optional: if this is a merge commit, it will have two parent commits)
 # author John Doe <johndoe@company.com> 1460709478 -0700
 # committer John Doe <johndoe@company.com> 1460709478 -0700
-COMMIT_MSG_TEMPLATE_REGEX = '^tree.+\n(?:parent.+\n){1,2}author.+\ncommitter.+\n\n(.+?)\n\n(This commit .+\n)[\w\W]+HOW BUILT\n[\w\W]+HOW VERIFIED\n[\w\W]+(?:(?:Change-Id: .+\nSigned-off-by: .+)|(?:Signed-off-by: .+\nChange-Id: .+))$'
+COMMIT_MSG_TEMPLATE_REGEX = '^tree.+\n(?:parent.+\n){1,2}author.+\ncommitter.+\n\n(.+?)\n\n(This commit .+\n)[\w\W]+HOW BUILT\n[\w\W]+HOW VERIFIED\n[\w\W]+(?:(?:Change-Id: .+\n+Signed-off-by: .+)|(?:Signed-off-by: .+\n+Change-Id: .+))$'
 # This regular expression will be used to match the fixed/referenced issue(s) mentioned 
 # in the second paragraph of the commit message.
 COMMIT_MSG_ISSUE_REGEX = '(?:fixes|refs) \#(\d+)'
