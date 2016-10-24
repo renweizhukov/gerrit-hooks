@@ -32,7 +32,7 @@ REDMINE_HOST = "http://redmine.mydomain.com"
 redmine = Redmine(REDMINE_HOST, key=REDMINE_API_KEY)
 
 # The regex used for finding the issue id.
-REDMINE_ISSUE_ID_REGEX = '\#(\d+)'
+REDMINE_ISSUE_ID_REGEX = '(?:fixes|refs) \#(\d+)'
 
 # The regex used for finding the gerrit change URL.
 GERRIT_URL_REGEX = 'Gerrit URL: (http://gerrit.mydomain.com:8082/\d+)'
@@ -90,17 +90,26 @@ if __name__ == '__main__':
 
     regex = re.compile(REDMINE_ISSUE_ID_REGEX, re.IGNORECASE)
     mgi = regex.finditer(commitmsg)
+    
+    updatedIssues = set()
     for mg in mgi:
         redmineIssueId = int(mg.group(1))
         if not redmineIssueId or redmineIssueId == 0:
             print "No issue is referenced in the commit message!!"
             sys.exit(0)
+
+        # Only update this issue if it hasn't been updated in a previous iteration.
+        if redmineIssueId in updatedIssues:
+            print "The issue {0:d} has already been updated in a previous iteration!!".format(redmineIssueId)
+            continue
             
         # If this is the first patch set, we will update the issue with the gerrit URL; otherwise,
         # we check if the issue has ever been updated with the gerrit URL. If yes, we skip it and 
         # if no, we will update the issue with the gerrit URL.
         if int(options.patchset) == 1:
-            print "This is the first patchset {0} for issue {1}. Will update the issue.".format(options.patchset, redmineIssueId)
+            issue = redmine.issue.get(redmineIssueId)
+            isStatusNew = (issue.status.name == 'New')
+            print "This is the first patchset {0} for issue {1:d}. Will update the issue.".format(options.patchset, redmineIssueId)
         else:
             isAlreadyUpdated, isStatusNew = CheckRedmineIssue(redmineIssueId, options.changeurl)
             
@@ -125,11 +134,13 @@ if __name__ == '__main__':
             
         isUpdateDone = False
         if isStatusNew:
+            print 'Setting the status of issue {0:d} to In Progress.'.format(redmineIssueId)
             isUpdateDone = redmine.issue.update(redmineIssueId, status_id=2, notes=redmineNotes) # The id of status "In Progress" is 2.
         else:
             isUpdateDone = redmine.issue.update(redmineIssueId, notes=redmineNotes)
 
         if isUpdateDone:
+            updatedIssues.add(redmineIssueId)
             print 'Updating issue {0:d} succeeded.'.format(redmineIssueId)
         else:
             print 'Updating issue {0:d} failed.'.format(redmineIssueId)
