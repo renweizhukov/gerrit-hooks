@@ -3,8 +3,6 @@ All gerrit-related hooks.
 
 ## patchset-created
 
-Courtesy of https://github.com/tru/redmine-gerrit-scripts/blob/master/README.md.
-
 This is a simple Gerrit hook for updating Redmine with information about what changes are in Gerrit review.
 
 It parses the commit messages from Gerrit and looks for a Redmine issue in the style of "#1028".
@@ -18,8 +16,8 @@ Script is tested with Redmine 3.2.0.stable and Gerrit 2.11.4.
 1. Edit the script to set the variables according to your Gerrit and Redmine server setup.
 (1) REDMINE_API_KEY
 (2) REDMINE_HOST
-(3) REDMINE_HOST_PORT_NUMBER
-(4) REDMINE_HOST_USING_SSL
+(3) REDMINE_ISSUE_ID_REGEX
+(4) GERRIT_URL_REGEX
 (5) GERRIT_PROJECTS
 
 2. Put the script in the $GERRIT_HOME/hooks directory. If gerrit is installed on a Linux server, don't forget to make the script executable.
@@ -28,7 +26,19 @@ Script is tested with Redmine 3.2.0.stable and Gerrit 2.11.4.
 chmod +x $GERRIT_HOME/hooks/patchset-created
 ```
 
-3. If the name of the script is changed from patchset-created to something else don't forget to update the [Hooks] section of the $GERRIT_HOME/etc/gerrit.config to include patchsetCreatedHook = new_script_name. For more information see the gerrit hooks documentation 
+3. Install the python-redmine package.
+
+```bash
+$ pip install python-redmine
+```
+
+If you receive the error "Permission Denied", please use the sudo command.
+
+```bash
+$ sudo -H pip install python-redmine
+```
+
+4. If the name of the script is changed from patchset-created to something else don't forget to update the [Hooks] section of the $GERRIT_HOME/etc/gerrit.config to include patchsetCreatedHook = new_script_name. For more information see the gerrit hooks documentation 
 at https://gerrit-review.googlesource.com/Documentation/config-hooks.html#_configuration_settings.
 
 ```
